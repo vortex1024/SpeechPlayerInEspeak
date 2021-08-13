@@ -292,6 +292,7 @@ def _setVoiceAndVariant(voice=None, variant=None):
 			espeakDLL.espeak_SetVoiceByName(encodeEspeakString("%s+%s" % (voice, variant)))
 		except:
 			espeakDLL.espeak_SetVoiceByName(encodeEspeakString(voice))
+			log.eror("da, bre, ceva nu a mers")
 
 def setVoiceAndVariant(voice=None, variant=None):
 	_execWhenDone(_setVoiceAndVariant, voice=voice, variant=variant)
@@ -331,7 +332,7 @@ def initialize(indexCallback=None):
 	espeakDLL.espeak_ListVoices.restype=POINTER(POINTER(espeak_VOICE))
 	espeakDLL.espeak_GetCurrentVoice.restype=POINTER(espeak_VOICE)
 	espeakDLL.espeak_SetVoiceByName.argtypes=(c_char_p,)
-	eSpeakPath = os.path.join(globalVars.appDir, "synthDrivers")
+	eSpeakPath = os.path.join(os.path.dirname(__file__))
 	sampleRate = espeakDLL.espeak_Initialize(
 		AUDIO_OUTPUT_SYNCHRONOUS, 300,
 		os.fsencode(eSpeakPath),
@@ -372,7 +373,7 @@ def info():
 	return espeakDLL.espeak_Info(None).decode()
 
 def getVariantDict():
-	dir = os.path.join(globalVars.appDir, "synthDrivers", "espeak-ng-data", "voices", "!v")
+	dir = os.path.join(os.path.dirname(__file__),  "espeak-ng-data", "voices", "!v")
 	# Translators: name of the default espeak varient.
 	variantDict={"none": pgettext("espeakVarient", "none")}
 	for fileName in os.listdir(dir):
